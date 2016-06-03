@@ -47,7 +47,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifdef _ANDROID_
   #include <binder/MemoryHeapBase.h>
 #ifdef _ANDROID_ICS_
-  #include <QComOMXMetadata.h>
+  #include "QComOMXMetadata.h"
 #endif
 #endif // _ANDROID_
 #include <pthread.h>
@@ -83,7 +83,11 @@ public:
 
 #ifdef USE_ION
     static const char* MEM_DEVICE = "/dev/ion";
+    #ifdef MAX_RES_720P
+    #define MEM_HEAP_ID ION_CAMERA_HEAP_ID
+    #else
     #define MEM_HEAP_ID ION_CP_MM_HEAP_ID
+    #endif
 #elif MAX_RES_720P
 static const char* MEM_DEVICE = "/dev/pmem_adsp";
 #elif MAX_RES_1080P_EBI

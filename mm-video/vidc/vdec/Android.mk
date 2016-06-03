@@ -55,11 +55,11 @@ libOmxVdec-def += -DUSE_ION
 include $(CLEAR_VARS)
 LOCAL_PATH:= $(ROOT_DIR)
 
-ifneq ($(TARGET_QCOM_DISPLAY_VARIANT),)
-PLATFORM := .
+ifeq ($(TARGET_QCOM_DISPLAY_VARIANT),caf)
+DISPLAY := display-caf
 libOmxVdec-def += -DDISPLAYCAF
 else
-PLATFORM := $(TARGET_BOARD_PLATFORM)
+DISPLAY := display/$(TARGET_BOARD_PLATFORM)
 endif
 
 libmm-vdec-inc          := bionic/libc/include
@@ -70,17 +70,17 @@ libmm-vdec-inc          += hardware/qcom/media-caf/mm-core/inc
 libmm-vdec-inc          += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
 #DRM include - Interface which loads the DRM library
 libmm-vdec-inc	        += $(OMX_VIDEO_PATH)/DivxDrmDecrypt/inc
-libmm-vdec-inc          += $(call project-path-for,qcom-display)/$(PLATFORM)/libgralloc
+libmm-vdec-inc          += hardware/qcom/$(DISPLAY)/libgralloc
 libmm-vdec-inc          += frameworks/native/include/media/openmax
 libmm-vdec-inc          += frameworks/native/include/media/hardware
 libmm-vdec-inc          += hardware/qcom/media-caf/libc2dcolorconvert
-libmm-vdec-inc          += $(call project-path-for,qcom-display)/$(PLATFORM)/libcopybit
+libmm-vdec-inc          += hardware/qcom/$(DISPLAY)/libcopybit
 libmm-vdec-inc          += frameworks/av/include/media/stagefright
-libmm-vdec-inc          += $(call project-path-for,qcom-display)/$(PLATFORM)/libqservice
+libmm-vdec-inc          += hardware/qcom/$(DISPLAY)/libqservice
 libmm-vdec-inc          += frameworks/av/media/libmediaplayerservice
 libmm-vdec-inc          += frameworks/native/include/binder
-ifneq ($(TARGET_QCOM_DISPLAY_VARIANT),)
-libmm-vdec-inc          += $(call project-path-for,qcom-display)/$(PLATFORM)/libqdutils
+ifeq ($(DISPLAY),display-caf)
+libmm-vdec-inc          += hardware/qcom/$(DISPLAY)/libqdutils
 endif
 
 
@@ -94,7 +94,7 @@ LOCAL_SHARED_LIBRARIES  := liblog libutils libbinder libcutils libdl
 
 LOCAL_SHARED_LIBRARIES  += libdivxdrmdecrypt
 LOCAL_SHARED_LIBRARIES += libqservice
-ifneq ($(TARGET_QCOM_DISPLAY_VARIANT),)
+ifeq ($(DISPLAY),display-caf)
 LOCAL_SHARED_LIBRARIES  += libqdMetaData
 endif
 
